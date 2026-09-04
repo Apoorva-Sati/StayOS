@@ -1,9 +1,10 @@
-import { withMiddlewareAuthRequired } from '@auth0/nextjs-auth0/edge';
+import type { NextRequest } from 'next/server';
+import { auth0 } from './lib/route';
 
-// Defense-in-depth alongside the getSession() check in dashboard/page.tsx:
-// this stops unauthenticated requests at the edge before they even render.
-export default withMiddlewareAuthRequired();
+export async function middleware(request: NextRequest) {
+  return auth0.middleware(request);
+}
 
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };

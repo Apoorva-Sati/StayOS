@@ -1,22 +1,28 @@
-import { getSession } from '@auth0/nextjs-auth0';
+import { auth0 } from '@/lib/route';
 import { redirect } from 'next/navigation';
 
-export default async function Home() {
-  const session = await getSession();
+export default async function Dashboard() {
+  const session = await auth0.getSession();
 
-  if (session?.user) {
-    redirect('/dashboard');
+  if (!session?.user) {
+    redirect('/auth/login');
   }
 
   return (
     <main className="p-10">
-      <h1 className="text-2xl font-semibold">StayOS admin</h1>
-      <p className="mt-2 text-gray-600">Front desk / owner login.</p>
-      <a
-        href="/api/auth/login"
-        className="mt-4 inline-block rounded bg-black px-4 py-2 text-white"
-      >
-        Log in
+      <h1 className="text-2xl font-semibold">Dashboard</h1>
+      <p className="mt-2 text-gray-600">
+        Logged in as {session!.user.email}
+      </p>
+
+      {/*
+        Week 3 goes here: arrivals, departures, occupied/available rooms,
+        rooms needing cleaning, pending payments. Not built yet - this route
+        just proves the Auth0 login + protected-route wiring works.
+      */}
+
+      <a href="/auth/logout" className="mt-6 inline-block text-sm underline">
+        Log out
       </a>
     </main>
   );
